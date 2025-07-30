@@ -30,6 +30,7 @@ export default async function Header() {
           {session ? (
             <div className="flex justify-center items-center gap-3">
               {session?.user?.name}
+              {session.user?.email}
               {session.user?.image && (
                 <Image
                   className="rounded-full"

@@ -1,30 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
-import { Login } from "@/hooks/useSignIn";
+import React, { useState, useEffect } from "react";
 import { getSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Login, LogIn } from "@/hooks/useSignIn";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Email:", email, "Password:", password);
-    router.push("/dashboard");
-  };
-
   useEffect(() => {
-    async function session() {
-      const sessionData = await getSession();
-      if (sessionData) {
-        redirect("/");
+    async function checkSession() {
+      const session = await getSession();
+      if (session) {
+        router.push("/");
       }
     }
-    session();
+    checkSession();
   }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    LogIn(email, password);
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -68,9 +67,6 @@ export default function SignInPage() {
             className="w-full py-2 text-white bg-gray-900 rounded-lg hover:bg-gray-800"
           >
             Sign in with GitHub
-          </button>
-          <button className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-            Sign in with Facebook
           </button>
         </div>
       </div>
